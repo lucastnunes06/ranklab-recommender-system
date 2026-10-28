@@ -1,7 +1,9 @@
 import numpy as np
+import pytest
 from fastapi.testclient import TestClient
 from ranklab.api import app
 from ranklab.metrics import ndcg_at_k, evaluate
+from ranklab.rerank import rerank_indices
 from ranklab.synthetic import make_catalog, make_sessions
 from ranklab.service import get_recommendations
 
@@ -42,9 +44,6 @@ def test_metrics_api():
     assert resp.status_code == 200 and 'ndcg_at_5' in resp.json()['test']['model']
 
 # Os testes abaixo verificam comportamento, não só a presença dos módulos.
-import pytest
-from ranklab.rerank import rerank_indices
-
 
 def test_rerank_zero_diversity_is_score_order():
     indices = rerank_indices(['Pizza', 'Pizza', 'Árabe'], [.9, .89, .88], 0)
