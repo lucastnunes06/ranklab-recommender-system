@@ -1,127 +1,499 @@
 {
-  "dataset": "100% sintético, usuários, restaurantes, cliques e horários simulados",
+  "dataset": "100% sintético: preferências, restaurantes e cliques inventados",
   "seed": 17,
+  "split": "IDs de sessão sequenciais, sem timestamps reais; NÃO é um split temporal validado",
   "train_sessions": 870,
   "validation_sessions": 290,
   "test_sessions": 290,
   "candidates_per_session": 12,
+  "selection": {
+    "criterion": "NDCG@5 na validação; desempate pela ordem predefinida da busca",
+    "selected_id": "hgb_3",
+    "selected_parameters": {
+      "max_iter": 125,
+      "max_depth": 4,
+      "learning_rate": 0.08
+    },
+    "candidates": [
+      {
+        "id": "hgb_1",
+        "params": {
+          "max_iter": 80,
+          "max_depth": 3,
+          "learning_rate": 0.08
+        },
+        "validation_ndcg_at_5": 0.6631
+      },
+      {
+        "id": "hgb_2",
+        "params": {
+          "max_iter": 125,
+          "max_depth": 3,
+          "learning_rate": 0.08
+        },
+        "validation_ndcg_at_5": 0.659
+      },
+      {
+        "id": "hgb_3",
+        "params": {
+          "max_iter": 125,
+          "max_depth": 4,
+          "learning_rate": 0.08
+        },
+        "validation_ndcg_at_5": 0.6655
+      }
+    ],
+    "test_not_used_for_selection": true
+  },
   "test": {
     "model": {
-      "ndcg_at_5": 0.5696,
-      "hit_rate_at_5": 0.7897,
-      "mrr_at_5": 0.4971,
-      "mean_eta_top_5": 30.38,
-      "unique_cuisines_top_5": 3.71,
-      "new_merchant_share_top_5": 0.2517,
+      "ndcg_at_5": 0.6559,
+      "hit_rate_at_5": 0.8448,
+      "mrr_at_5": 0.5926,
+      "mean_eta_top_5": 32.07,
+      "unique_cuisines_top_5": 3.81,
+      "new_merchant_share_top_5": 0.2372,
       "sessions": 290,
+      "sessions_with_click": 272,
+      "sessions_without_click": 18,
+      "hit_rate_at_5_given_click": 0.9007,
       "hit_rate_by_preference": {
-        "Saudável": 0.8293,
-        "Árabe": 0.7241,
-        "Vegana": 0.8605,
-        "Italiana": 0.7353,
-        "Hambúrguer": 0.7,
-        "Pizza": 0.7895,
-        "Brasileira": 0.8718,
-        "Japonesa": 0.75
+        "Brasileira": 0.8947,
+        "Hambúrguer": 0.8438,
+        "Italiana": 0.814,
+        "Japonesa": 0.8649,
+        "Pizza": 0.9062,
+        "Saudável": 0.7333,
+        "Vegana": 0.8837,
+        "Árabe": 0.8
+      }
+    },
+    "logistic_baseline": {
+      "ndcg_at_5": 0.671,
+      "hit_rate_at_5": 0.8655,
+      "mrr_at_5": 0.6058,
+      "mean_eta_top_5": 31.93,
+      "unique_cuisines_top_5": 3.82,
+      "new_merchant_share_top_5": 0.2531,
+      "sessions": 290,
+      "sessions_with_click": 272,
+      "sessions_without_click": 18,
+      "hit_rate_at_5_given_click": 0.9228,
+      "hit_rate_by_preference": {
+        "Brasileira": 0.9211,
+        "Hambúrguer": 0.8125,
+        "Italiana": 0.8372,
+        "Japonesa": 0.8919,
+        "Pizza": 0.9375,
+        "Saudável": 0.8,
+        "Vegana": 0.907,
+        "Árabe": 0.8
+      }
+    },
+    "pairwise_baseline": {
+      "ndcg_at_5": 0.6714,
+      "hit_rate_at_5": 0.8621,
+      "mrr_at_5": 0.6072,
+      "mean_eta_top_5": 31.83,
+      "unique_cuisines_top_5": 3.83,
+      "new_merchant_share_top_5": 0.2434,
+      "sessions": 290,
+      "sessions_with_click": 272,
+      "sessions_without_click": 18,
+      "hit_rate_at_5_given_click": 0.9191,
+      "hit_rate_by_preference": {
+        "Brasileira": 0.9211,
+        "Hambúrguer": 0.8438,
+        "Italiana": 0.8372,
+        "Japonesa": 0.8649,
+        "Pizza": 0.9375,
+        "Saudável": 0.8,
+        "Vegana": 0.8837,
+        "Árabe": 0.8
       }
     },
     "rating_baseline": {
-      "ndcg_at_5": 0.2857,
-      "hit_rate_at_5": 0.4828,
-      "mrr_at_5": 0.2224,
-      "mean_eta_top_5": 37.6,
+      "ndcg_at_5": 0.3346,
+      "hit_rate_at_5": 0.5552,
+      "mrr_at_5": 0.263,
+      "mean_eta_top_5": 37.88,
       "unique_cuisines_top_5": 3.81,
-      "new_merchant_share_top_5": 0.1545,
+      "new_merchant_share_top_5": 0.1697,
       "sessions": 290,
+      "sessions_with_click": 272,
+      "sessions_without_click": 18,
+      "hit_rate_at_5_given_click": 0.5919,
       "hit_rate_by_preference": {
-        "Saudável": 0.4146,
-        "Árabe": 0.3793,
-        "Vegana": 0.6047,
-        "Italiana": 0.5882,
-        "Hambúrguer": 0.3667,
-        "Pizza": 0.5,
-        "Brasileira": 0.4615,
-        "Japonesa": 0.5
+        "Brasileira": 0.5789,
+        "Hambúrguer": 0.5,
+        "Italiana": 0.6047,
+        "Japonesa": 0.6757,
+        "Pizza": 0.5938,
+        "Saudável": 0.4333,
+        "Vegana": 0.5116,
+        "Árabe": 0.5143
       }
     },
     "fastest_baseline": {
-      "ndcg_at_5": 0.3757,
-      "hit_rate_at_5": 0.6034,
-      "mrr_at_5": 0.3011,
-      "mean_eta_top_5": 25.5,
-      "unique_cuisines_top_5": 3.66,
-      "new_merchant_share_top_5": 0.251,
+      "ndcg_at_5": 0.3932,
+      "hit_rate_at_5": 0.6207,
+      "mrr_at_5": 0.3191,
+      "mean_eta_top_5": 25.68,
+      "unique_cuisines_top_5": 3.8,
+      "new_merchant_share_top_5": 0.2614,
       "sessions": 290,
+      "sessions_with_click": 272,
+      "sessions_without_click": 18,
+      "hit_rate_at_5_given_click": 0.6618,
       "hit_rate_by_preference": {
-        "Saudável": 0.6829,
-        "Árabe": 0.5172,
-        "Vegana": 0.5814,
-        "Italiana": 0.6765,
-        "Hambúrguer": 0.6,
-        "Pizza": 0.5789,
-        "Brasileira": 0.5385,
-        "Japonesa": 0.6389
+        "Brasileira": 0.6579,
+        "Hambúrguer": 0.6562,
+        "Italiana": 0.5581,
+        "Japonesa": 0.7568,
+        "Pizza": 0.5938,
+        "Saudável": 0.5667,
+        "Vegana": 0.5349,
+        "Árabe": 0.6571
       }
     }
   },
   "validation": {
-    "ml": {
-      "ndcg_at_5": 0.5756,
-      "hit_rate_at_5": 0.7724,
-      "mrr_at_5": 0.5099,
-      "mean_eta_top_5": 31.23,
-      "unique_cuisines_top_5": 3.7,
-      "new_merchant_share_top_5": 0.2352,
+    "model": {
+      "ndcg_at_5": 0.6655,
+      "hit_rate_at_5": 0.8379,
+      "mrr_at_5": 0.6082,
+      "mean_eta_top_5": 32.46,
+      "unique_cuisines_top_5": 3.86,
+      "new_merchant_share_top_5": 0.2366,
       "sessions": 290,
+      "sessions_with_click": 268,
+      "sessions_without_click": 22,
+      "hit_rate_at_5_given_click": 0.9067,
       "hit_rate_by_preference": {
-        "Vegana": 0.875,
-        "Hambúrguer": 0.7959,
-        "Brasileira": 0.6444,
-        "Italiana": 0.7838,
-        "Árabe": 0.6364,
-        "Japonesa": 0.9091,
-        "Saudável": 0.7879,
-        "Pizza": 0.7857
+        "Brasileira": 0.7241,
+        "Hambúrguer": 0.8148,
+        "Italiana": 0.9583,
+        "Japonesa": 0.8857,
+        "Pizza": 0.7895,
+        "Saudável": 0.7059,
+        "Vegana": 0.8837,
+        "Árabe": 0.8611
       }
     },
-    "rating": {
-      "ndcg_at_5": 0.2702,
-      "hit_rate_at_5": 0.4724,
-      "mrr_at_5": 0.2051,
-      "mean_eta_top_5": 38.09,
-      "unique_cuisines_top_5": 3.84,
-      "new_merchant_share_top_5": 0.1566,
+    "logistic_baseline": {
+      "ndcg_at_5": 0.6621,
+      "hit_rate_at_5": 0.831,
+      "mrr_at_5": 0.6052,
+      "mean_eta_top_5": 32.2,
+      "unique_cuisines_top_5": 3.83,
+      "new_merchant_share_top_5": 0.2545,
       "sessions": 290,
+      "sessions_with_click": 268,
+      "sessions_without_click": 22,
+      "hit_rate_at_5_given_click": 0.8993,
       "hit_rate_by_preference": {
-        "Vegana": 0.5312,
-        "Hambúrguer": 0.2857,
-        "Brasileira": 0.5111,
-        "Italiana": 0.6486,
-        "Árabe": 0.6061,
-        "Japonesa": 0.3636,
-        "Saudável": 0.4545,
-        "Pizza": 0.4286
+        "Brasileira": 0.7241,
+        "Hambúrguer": 0.8148,
+        "Italiana": 0.9375,
+        "Japonesa": 0.8857,
+        "Pizza": 0.7895,
+        "Saudável": 0.7059,
+        "Vegana": 0.907,
+        "Árabe": 0.8056
       }
     },
-    "fast": {
-      "ndcg_at_5": 0.3842,
-      "hit_rate_at_5": 0.6172,
-      "mrr_at_5": 0.3078,
-      "mean_eta_top_5": 25.87,
-      "unique_cuisines_top_5": 3.69,
-      "new_merchant_share_top_5": 0.2524,
+    "pairwise_baseline": {
+      "ndcg_at_5": 0.665,
+      "hit_rate_at_5": 0.8276,
+      "mrr_at_5": 0.6103,
+      "mean_eta_top_5": 32.13,
+      "unique_cuisines_top_5": 3.82,
+      "new_merchant_share_top_5": 0.2407,
       "sessions": 290,
+      "sessions_with_click": 268,
+      "sessions_without_click": 22,
+      "hit_rate_at_5_given_click": 0.8955,
       "hit_rate_by_preference": {
-        "Vegana": 0.625,
-        "Hambúrguer": 0.6531,
-        "Brasileira": 0.5333,
-        "Italiana": 0.8108,
-        "Árabe": 0.4848,
-        "Japonesa": 0.7273,
-        "Saudável": 0.6061,
-        "Pizza": 0.4643
+        "Brasileira": 0.7241,
+        "Hambúrguer": 0.8148,
+        "Italiana": 0.9375,
+        "Japonesa": 0.8571,
+        "Pizza": 0.7895,
+        "Saudável": 0.7059,
+        "Vegana": 0.907,
+        "Árabe": 0.8056
+      }
+    },
+    "rating_baseline": {
+      "ndcg_at_5": 0.3234,
+      "hit_rate_at_5": 0.5483,
+      "mrr_at_5": 0.2506,
+      "mean_eta_top_5": 37.91,
+      "unique_cuisines_top_5": 3.85,
+      "new_merchant_share_top_5": 0.1676,
+      "sessions": 290,
+      "sessions_with_click": 268,
+      "sessions_without_click": 22,
+      "hit_rate_at_5_given_click": 0.5933,
+      "hit_rate_by_preference": {
+        "Brasileira": 0.4828,
+        "Hambúrguer": 0.4815,
+        "Italiana": 0.5625,
+        "Japonesa": 0.5429,
+        "Pizza": 0.6053,
+        "Saudável": 0.5294,
+        "Vegana": 0.6744,
+        "Árabe": 0.4444
+      }
+    },
+    "fastest_baseline": {
+      "ndcg_at_5": 0.3683,
+      "hit_rate_at_5": 0.5897,
+      "mrr_at_5": 0.2956,
+      "mean_eta_top_5": 25.6,
+      "unique_cuisines_top_5": 3.71,
+      "new_merchant_share_top_5": 0.2566,
+      "sessions": 290,
+      "sessions_with_click": 268,
+      "sessions_without_click": 22,
+      "hit_rate_at_5_given_click": 0.6381,
+      "hit_rate_by_preference": {
+        "Brasileira": 0.4828,
+        "Hambúrguer": 0.5185,
+        "Italiana": 0.6875,
+        "Japonesa": 0.6857,
+        "Pizza": 0.5526,
+        "Saudável": 0.5588,
+        "Vegana": 0.4651,
+        "Árabe": 0.7222
       }
     }
   },
-  "limitations": "Métricas offline sintéticas; não estimam conversão, receita, CTR ou resultados de operações reais."
+  "calibration": {
+    "test_synthetic": {
+      "brier_score": 0.0585,
+      "expected_calibration_error": 0.0093,
+      "roc_auc": 0.8826,
+      "simulated_click_rate": 0.0782,
+      "mean_model_score": 0.0795,
+      "reliability_bins": [
+        {
+          "range": [
+            0.0,
+            0.1
+          ],
+          "count": 2587,
+          "mean_score": 0.0205,
+          "observed_click_rate": 0.0197
+        },
+        {
+          "range": [
+            0.1,
+            0.2
+          ],
+          "count": 467,
+          "mean_score": 0.1447,
+          "observed_click_rate": 0.1563
+        },
+        {
+          "range": [
+            0.2,
+            0.3
+          ],
+          "count": 191,
+          "mean_score": 0.2435,
+          "observed_click_rate": 0.288
+        },
+        {
+          "range": [
+            0.3,
+            0.4
+          ],
+          "count": 97,
+          "mean_score": 0.3441,
+          "observed_click_rate": 0.299
+        },
+        {
+          "range": [
+            0.4,
+            0.5
+          ],
+          "count": 59,
+          "mean_score": 0.4503,
+          "observed_click_rate": 0.3898
+        },
+        {
+          "range": [
+            0.5,
+            0.6
+          ],
+          "count": 33,
+          "mean_score": 0.5395,
+          "observed_click_rate": 0.5152
+        },
+        {
+          "range": [
+            0.6,
+            0.7
+          ],
+          "count": 26,
+          "mean_score": 0.6471,
+          "observed_click_rate": 0.3846
+        },
+        {
+          "range": [
+            0.7,
+            0.8
+          ],
+          "count": 18,
+          "mean_score": 0.7332,
+          "observed_click_rate": 0.7222
+        },
+        {
+          "range": [
+            0.8,
+            0.9
+          ],
+          "count": 2,
+          "mean_score": 0.8206,
+          "observed_click_rate": 0.5
+        }
+      ],
+      "warning": "Calibração medida em cliques artificiais: não é probabilidade confiável de clique real."
+    },
+    "validation_synthetic": {
+      "brier_score": 0.0565,
+      "expected_calibration_error": 0.0066,
+      "roc_auc": 0.8804,
+      "simulated_click_rate": 0.077,
+      "mean_model_score": 0.0778,
+      "reliability_bins": [
+        {
+          "range": [
+            0.0,
+            0.1
+          ],
+          "count": 2650,
+          "mean_score": 0.0211,
+          "observed_click_rate": 0.0242
+        },
+        {
+          "range": [
+            0.1,
+            0.2
+          ],
+          "count": 387,
+          "mean_score": 0.1407,
+          "observed_click_rate": 0.1447
+        },
+        {
+          "range": [
+            0.2,
+            0.3
+          ],
+          "count": 188,
+          "mean_score": 0.2467,
+          "observed_click_rate": 0.2128
+        },
+        {
+          "range": [
+            0.3,
+            0.4
+          ],
+          "count": 119,
+          "mean_score": 0.3423,
+          "observed_click_rate": 0.3277
+        },
+        {
+          "range": [
+            0.4,
+            0.5
+          ],
+          "count": 69,
+          "mean_score": 0.4487,
+          "observed_click_rate": 0.3913
+        },
+        {
+          "range": [
+            0.5,
+            0.6
+          ],
+          "count": 31,
+          "mean_score": 0.5419,
+          "observed_click_rate": 0.5484
+        },
+        {
+          "range": [
+            0.6,
+            0.7
+          ],
+          "count": 18,
+          "mean_score": 0.6565,
+          "observed_click_rate": 0.6111
+        },
+        {
+          "range": [
+            0.7,
+            0.8
+          ],
+          "count": 16,
+          "mean_score": 0.7481,
+          "observed_click_rate": 0.75
+        },
+        {
+          "range": [
+            0.8,
+            0.9
+          ],
+          "count": 2,
+          "mean_score": 0.8505,
+          "observed_click_rate": 1.0
+        }
+      ],
+      "warning": "Calibração medida em cliques artificiais: não é probabilidade confiável de clique real."
+    }
+  },
+  "limitations": "Avaliação offline e artificial; resultados não equivalem a CTR, vendas, satisfação ou calibração em pessoas reais.",
+  "paired_bootstrap_ndcg_difference": {
+    "rating_baseline": {
+      "estimate": 0.3214,
+      "ci95": [
+        0.2693,
+        0.3716
+      ],
+      "sessions": 290,
+      "replications": 2000,
+      "seed": 4017
+    },
+    "fastest_baseline": {
+      "estimate": 0.2628,
+      "ci95": [
+        0.2197,
+        0.3065
+      ],
+      "sessions": 290,
+      "replications": 2000,
+      "seed": 4017
+    },
+    "logistic_baseline": {
+      "estimate": -0.0151,
+      "ci95": [
+        -0.0339,
+        0.0043
+      ],
+      "sessions": 290,
+      "replications": 2000,
+      "seed": 4017
+    },
+    "pairwise_baseline": {
+      "estimate": -0.0155,
+      "ci95": [
+        -0.0356,
+        0.0051
+      ],
+      "sessions": 290,
+      "replications": 2000,
+      "seed": 4017
+    }
+  }
 }

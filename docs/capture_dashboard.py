@@ -37,7 +37,7 @@ def capture() -> None:
 
     demo_responses = {}
     for cuisine, diversity in [
-        ("Pizza", 0.45), ("Pizza", 0.0), ("Pizza", 0.5),
+        ("Pizza", 0.5), ("Pizza", 0.0), ("Pizza", 0.5),
         ("Pizza", 1.0), ("Japonesa", 1.0),
     ]:
         params = {

@@ -1,74 +1,59 @@
-# Decisões e experimentos do RankLab
+# Decisões técnicas do RankLab
 
-Esta documentação registra **o comportamento implementado**, e não uma história fictícia de desenvolvimento. É um projeto de demonstração com dados simulados e apoio de ferramentas de IA durante a implementação.
+A intenção deste documento é registrar **o estado efetivo do código**, os compromissos assumidos e resultados reproduzidos. Não descreve uma história fictícia de desenvolvimento manual. O projeto foi preparado com assistência de IA, e o material é disponibilizado para revisão.
 
-## 1. Qual problema o modelo resolve?
+## 1. Preço: por que é filtro obrigatório?
 
-Ordenar uma lista de 12 restaurantes candidatos para uma sessão hipotética. A cada sessão variam a cozinha preferida, o orçamento, a pressa e a necessidade de opção vegetariana. A função geradora simula até um clique por sessão; aproximadamente 7% não têm clique.
+O comportamento inicial permitia recomendar restaurante fora da faixa selecionada, porque `budget_fit` era somente uma feature do modelo. Isso não respeitava a interpretação da interface.
 
-O algoritmo não aprende a partir de logs reais. As probabilidades são *scores de classificação* condicionados às regras do simulador. Chamar isso de CTR ou efeito de negócio seria incorreto.
+Agora o serviço executa `price_level <= budget` **antes** da pontuação. O gerador de cliques também restringe a escolha a restaurantes elegíveis em preço e dieta. O preço é **categórico**, não um valor monetário exato. Os testes verificam os três níveis e combinações sem resultados.
 
-## 2. Por que `HistGradientBoostingClassifier`?
+**Trade-off:** o conjunto de itens disponíveis diminui; em cenários extremos pode ser vazio. A mensagem da API apresenta esse caso sem afrouxar um filtro silenciosamente.
 
-Neste protótipo, os atributos são tabelares e o problema foi simplificado para uma classificação por candidato. O algoritmo permite capturar interações não lineares entre, por exemplo, urgência e prazo, sem adicionar um serviço externo ou uma infraestrutura de features.
+## 2. Scores não são promessas de probabilidade
 
-O custo dessa simplicidade é que o classificador não otimiza diretamente NDCG: a saída é ordenada posteriormente. Uma evolução plausível seria comparar com um ranker pairwise ou listwise nas mesmas partições.
+A API mantém o campo legado `ml_probability` para compatibilidade, mas sua saída representa uma confiança de classificador treinado em simulação. A interface utiliza `Índice do modelo: 0.xxx (não calibrado)` e a resposta inclui `score_interpretation`.
 
-## 3. Por que separar por sessão?
+Implementamos Brier score, ECE por faixas e ROC-AUC em holdout sintético. Mesmo com ECE de `0,0093`, isso não autoriza uma afirmação de probabilidade de clique real: os rótulos foram gerados por regras escritas no próprio projeto.
 
-Treino, validação e teste são divididos pelos IDs sequenciais das sessões: 60% / 20% / 20%. Todos os 12 candidatos de uma sessão ficam no mesmo conjunto. O catálogo de 48 restaurantes permanece compartilhado, ou seja, a avaliação não testa estabelecimentos inéditos.
+## 3. Validação por sessão, não por cronologia real
 
-A divisão é adequada para medir a ordenação em sessões futuras *do mesmo simulador*, mas não demonstra generalização para usuários ou mercados reais.
+Os IDs ordenados impedem vazamento de candidatos entre treino, validação e teste da mesma sessão. Entretanto, a geração não representa mudança no tempo. Documentamos a divisão como **sequencial por sessão**. O catálogo é compartilhado entre conjuntos.
 
-## 4. Baselines e métrica principal
+Três configurações HGB são comparadas por NDCG@5 na validação. A escolhida foi a terceira (125 iterações, profundidade 4, learning rate 0,08), aplicada ao teste sem reescolha. Foram incluídos baselines supervisionados logístico e pairwise.
 
-- **NDCG@5:** valoriza itens relevantes nas primeiras cinco posições, permitindo comparar a ordem produzida pelo modelo.
-- **Hit Rate@5:** mede se existe pelo menos um clique fictício entre as cinco primeiras opções da sessão.
-- **MRR@5:** considera a posição recíproca do primeiro clique dentro das cinco posições.
-- **Estrelas e menor ETA:** fornecem referências simples, não modelos concorrentes treinados.
+No teste, logística (`0,6710`) e pairwise (`0,6714`) superaram o boosting (`0,6559`) em NDCG@5. O bootstrap pareado de diferença **boosting menos pairwise** gerou IC95% `[-0,0356; 0,0051]`; inclui zero. O resultado correto não é declarar o boosting como vencedor absoluto, nem migrar para pairwise usando o teste como critério.
 
-`artifacts/metrics.json` contém os resultados e os cortes de Hit Rate por cozinha preferida. Não os interprete como desempenho de tráfego real.
+## 4. Diversidade: seleção na validação
 
-## 5. Diversidade: uma hipótese que pode piorar a relevância
+O re-ranker recebe a lista de scores e penaliza a repetição de cozinha. Intensidade `0,5` foi escolhida pela validação antes da leitura do teste e virou o padrão da API. Outros pesos no teste são mostrados somente como sensibilidade exploratória. Em comparação com intensidade zero, `0,5` levou o NDCG@5 de `0,6559` a `0,6637` e a variedade de `3,81` para `4,18` cozinhas por top-5, sempre no gerador sintético.
 
-A função em `ranklab/rerank.py` seleciona cada posição usando:
+A função de penalização de `0,042` é uma escolha de engenharia, não otimização de produto. Nenhuma mudança no score original acontece durante o re-ranking.
 
-```text
-score_ajustado = score_original - intensidade * 0,042 * número_de_itens_já_escolhidos_da_mesma_cozinha
-```
+## 5. Experimentos adicionais
 
-A quantidade `0,042` é uma escolha heurística explícita. A função não altera o score original. Com intensidade zero, a seleção equivale à ordenação descendente do modelo. Com intensidade positiva, restaurantes da mesma categoria recebem uma penalidade crescente nas posições seguintes.
+- **Seeds diferentes:** NDCG@5 do boosting entre `0,6198` e `0,6680`, ao mudar dados aleatórios do mesmo gerador. A configuração vencedora na validação varia entre as seeds. A variabilidade existe mesmo sem alterações no código.
+- **Restaurantes inéditos:** oito IDs são retirados do treino e da validação em estudo separado. Os resultados por candidato são `0,8796` (vistos) e `0,8873` (não vistos) em ROC-AUC, com atributos disponíveis em ambos os grupos. **Não** é uma simulação completa de cold start.
+- **Pairwise:** comparação com um algoritmo treinado em pares positivo/negativo da mesma sessão, sem uso no endpoint de recomendação.
 
-`python scripts/diversity_study.py` testa intensidades fixas `0`, `0,25`, `0,5`, `0,75` e `1`, no mesmo holdout com 290 sessões e 12 candidatos por sessão. A seleção top-5 mede NDCG, Hit Rate, MRR, número de cozinhas distintas, ETA médio e participação de estabelecimentos novos.
+O projeto ainda não corrige viés de posição, não dispõe de propensões de exposição nem compara perda listwise ou resultados de usuários reais. Essas são limitações assumidas, não features escondidas.
 
-O teste mostrou de 3,71 até 4,28 cozinhas distintas em média no top-5, mas NDCG ligeiramente menor no máximo de diversidade (0,5696 → 0,5669). Esses resultados são *descritivos*; nenhum peso foi escolhido por otimização no teste. É possível que mais variedade piore a relevância, e a função de utilidade sintética não captura preferências reais por diversidade.
+## 6. Qualidade de engenharia e demonstração
 
-A API, ao contrário do estudo offline, pode aplicar filtros de tempo e dieta antes do re-ranking, e mostra oito itens por padrão. Não compare diretamente a diversidade das duas situações sem considerar essas diferenças.
+O código separa gerador, modelos, métricas, regras de elegibilidade, re-ranking e API. A captura do painel é feita com os arquivos de HTML/CSS/JS efetivos e respostas calculadas pelo backend local em `TestClient`. Não há imagem gerada para simular um produto inexistente.
 
-## 6. Alterações para tornar o projeto inspecionável
+Os testes de integração incluem filtros rígidos, rotas, ausência de cliques, seleção de pesos, bootstrap determinístico e exclusão de restaurantes inéditos do treino. A suíte contém **34 testes**, cobertura observada de **95%** localmente e mínimo de 90% exigido no CI, além de lint de erros Python e auditoria consultiva das bibliotecas.
 
-- Um único algoritmo de re-ranking usado pela API e pelo experimento, evitando duas implementações diferentes.
-- HTML, CSS e JavaScript separados para facilitar leitura, manutenção e testes.
-- Uso de `textContent` para dados recebidos pela API, evitando inserir nomes fictícios diretamente como HTML.
-- Proteção contra uma resposta antiga de API sobrescrever uma seleção de filtros mais recente.
-- Testes de limites, filtros, estabilidade da ordenação, preservação de scores e métricas.
-- Capturas da interface geradas com as respostas reais do backend em `TestClient`, sem fingir conexão com serviços externos.
+O histórico de commits não foi manipulado para criar uma narrativa artificial. Melhorias futuras devem ser registradas em mudanças reais com hipóteses, resultados e eventuais problemas encontrados.
 
-## 7. Pontos ainda não resolvidos
-
-- **Viés de exposição:** o simulador sorteia cliques independentemente da posição exibida; isso não reflete logs de plataformas reais.
-- **Cold start:** os mesmos estabelecimentos podem aparecer no treino e no teste.
-- **Calibração:** os scores não foram auditados como probabilidades bem calibradas de cliques reais.
-- **Experimentos online:** não há A/B, métricas de receita, satisfação ou impacto operacional.
-- **Segurança e operação:** a API local não possui autenticação, limitação de taxa ou monitoramento de produção.
-- **Generalização:** os resultados podem refletir apenas as regras da geração de dados.
-
-## 8. Como reproduzir a auditoria
+## 7. Execução dos experimentos
 
 ```bash
 python scripts/train.py
 python scripts/diversity_study.py
+python scripts/robustness_study.py
+python scripts/cold_start_study.py
 pytest -q
 ```
 
-As figuras do README podem ser recriadas com `python -m docs.capture_dashboard` após instalar as dependências opcionais descritas no README. O GIF documenta cinco estados simulados calculados pelo backend do projeto; não representa uma sessão de uso real.
+O resultado do boosting no conjunto sintético é consultável em [`../artifacts/metrics.json`](../artifacts/metrics.json); o estudo de diversidade em [`../artifacts/diversity_study.json`](../artifacts/diversity_study.json). Não há validação em produção, APIs de restaurantes reais ou tratamento de dados pessoais.

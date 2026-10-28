@@ -42,11 +42,8 @@ def test_metrics_api():
     assert resp.status_code == 200 and 'ndcg_at_5' in resp.json()['test']['model']
 
 # Os testes abaixo verificam comportamento, não só a presença dos módulos.
-from pathlib import Path
-import json
 import pytest
 from ranklab.rerank import rerank_indices
-from ranklab.training import ROOT
 
 
 def test_rerank_zero_diversity_is_score_order():

@@ -1,61 +1,171 @@
 {
-  "description": "Estudo de sensibilidade da penalidade de diversidade no holdout sintético",
+  "description": "Peso selecionado na validação e avaliado no teste; outras intensidades são diagnósticos exploratórios",
   "seed": 17,
   "total_sessions": 1450,
+  "validation_sessions": 290,
   "holdout_sessions": 290,
   "k": 5,
   "penalty_per_repetition": 0.042,
+  "selection": {
+    "criterion": "Maior NDCG@5 na validação; desempate a favor da menor intensidade",
+    "chosen_diversity": 0.5,
+    "validation_results": [
+      {
+        "diversity": 0.0,
+        "ndcg_at_5": 0.6655
+      },
+      {
+        "diversity": 0.25,
+        "ndcg_at_5": 0.6672
+      },
+      {
+        "diversity": 0.5,
+        "ndcg_at_5": 0.6673
+      },
+      {
+        "diversity": 0.75,
+        "ndcg_at_5": 0.6622
+      },
+      {
+        "diversity": 1.0,
+        "ndcg_at_5": 0.6596
+      }
+    ],
+    "chosen_holdout_result": {
+      "diversity": 0.5,
+      "ndcg_change_vs_zero_ci95": {
+        "estimate": 0.0078,
+        "ci95": [
+          0.002,
+          0.0146
+        ],
+        "sessions": 290,
+        "replications": 2000,
+        "seed": 2043
+      },
+      "ndcg_at_5": 0.6637,
+      "hit_rate_at_5": 0.8621,
+      "mrr_at_5": 0.5974,
+      "unique_cuisines_top_5": 4.18,
+      "mean_eta_top_5": 32.27,
+      "new_merchant_share_top_5": 0.2331,
+      "sessions": 290,
+      "sessions_with_click": 272,
+      "hit_rate_at_5_given_click": 0.9191
+    },
+    "holdout_not_used_for_selection": true
+  },
   "levels": [
     {
       "diversity": 0.0,
-      "ndcg_at_5": 0.5696,
-      "hit_rate_at_5": 0.7897,
-      "mrr_at_5": 0.4971,
-      "unique_cuisines_top_5": 3.71,
-      "mean_eta_top_5": 30.38,
-      "new_merchant_share_top_5": 0.2517,
-      "sessions": 290
+      "ndcg_change_vs_zero_ci95": {
+        "estimate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "sessions": 290,
+        "replications": 2000,
+        "seed": 2043
+      },
+      "ndcg_at_5": 0.6559,
+      "hit_rate_at_5": 0.8448,
+      "mrr_at_5": 0.5926,
+      "unique_cuisines_top_5": 3.81,
+      "mean_eta_top_5": 32.07,
+      "new_merchant_share_top_5": 0.2372,
+      "sessions": 290,
+      "sessions_with_click": 272,
+      "hit_rate_at_5_given_click": 0.9007
     },
     {
       "diversity": 0.25,
-      "ndcg_at_5": 0.5692,
-      "hit_rate_at_5": 0.7862,
-      "mrr_at_5": 0.4977,
-      "unique_cuisines_top_5": 3.91,
-      "mean_eta_top_5": 30.52,
-      "new_merchant_share_top_5": 0.2524,
-      "sessions": 290
+      "ndcg_change_vs_zero_ci95": {
+        "estimate": 0.0049,
+        "ci95": [
+          0.0009,
+          0.0101
+        ],
+        "sessions": 290,
+        "replications": 2000,
+        "seed": 2043
+      },
+      "ndcg_at_5": 0.6609,
+      "hit_rate_at_5": 0.8552,
+      "mrr_at_5": 0.5958,
+      "unique_cuisines_top_5": 4.1,
+      "mean_eta_top_5": 32.24,
+      "new_merchant_share_top_5": 0.2352,
+      "sessions": 290,
+      "sessions_with_click": 272,
+      "hit_rate_at_5_given_click": 0.9118
     },
     {
       "diversity": 0.5,
-      "ndcg_at_5": 0.5716,
-      "hit_rate_at_5": 0.7897,
-      "mrr_at_5": 0.4997,
-      "unique_cuisines_top_5": 4.04,
-      "mean_eta_top_5": 30.58,
-      "new_merchant_share_top_5": 0.251,
-      "sessions": 290
+      "ndcg_change_vs_zero_ci95": {
+        "estimate": 0.0078,
+        "ci95": [
+          0.002,
+          0.0146
+        ],
+        "sessions": 290,
+        "replications": 2000,
+        "seed": 2043
+      },
+      "ndcg_at_5": 0.6637,
+      "hit_rate_at_5": 0.8621,
+      "mrr_at_5": 0.5974,
+      "unique_cuisines_top_5": 4.18,
+      "mean_eta_top_5": 32.27,
+      "new_merchant_share_top_5": 0.2331,
+      "sessions": 290,
+      "sessions_with_click": 272,
+      "hit_rate_at_5_given_click": 0.9191
     },
     {
       "diversity": 0.75,
-      "ndcg_at_5": 0.5684,
-      "hit_rate_at_5": 0.7828,
-      "mrr_at_5": 0.4977,
-      "unique_cuisines_top_5": 4.17,
-      "mean_eta_top_5": 30.68,
-      "new_merchant_share_top_5": 0.2483,
-      "sessions": 290
+      "ndcg_change_vs_zero_ci95": {
+        "estimate": 0.0069,
+        "ci95": [
+          0.0002,
+          0.0141
+        ],
+        "sessions": 290,
+        "replications": 2000,
+        "seed": 2043
+      },
+      "ndcg_at_5": 0.6628,
+      "hit_rate_at_5": 0.8586,
+      "mrr_at_5": 0.5972,
+      "unique_cuisines_top_5": 4.24,
+      "mean_eta_top_5": 32.23,
+      "new_merchant_share_top_5": 0.2359,
+      "sessions": 290,
+      "sessions_with_click": 272,
+      "hit_rate_at_5_given_click": 0.9154
     },
     {
       "diversity": 1.0,
-      "ndcg_at_5": 0.5669,
-      "hit_rate_at_5": 0.7793,
-      "mrr_at_5": 0.4967,
-      "unique_cuisines_top_5": 4.28,
-      "mean_eta_top_5": 30.86,
-      "new_merchant_share_top_5": 0.251,
-      "sessions": 290
+      "ndcg_change_vs_zero_ci95": {
+        "estimate": 0.0064,
+        "ci95": [
+          -0.0011,
+          0.0141
+        ],
+        "sessions": 290,
+        "replications": 2000,
+        "seed": 2043
+      },
+      "ndcg_at_5": 0.6623,
+      "hit_rate_at_5": 0.8586,
+      "mrr_at_5": 0.5966,
+      "unique_cuisines_top_5": 4.3,
+      "mean_eta_top_5": 32.22,
+      "new_merchant_share_top_5": 0.2386,
+      "sessions": 290,
+      "sessions_with_click": 272,
+      "hit_rate_at_5_given_click": 0.9154
     }
   ],
-  "caveats": "O catálogo e os cliques são sintéticos; o teste é descritivo. Este estudo não seleciona o peso ideal nem comprova impacto em usuários reais. A API aplica filtros antes do re-ranking; este estudo analisa o conjunto de 12 candidatos por sessão."
+  "caveats": "As sessões são artificiais. O teste das demais intensidades é apenas descritivo: não reescolher o peso olhando esses resultados. Intervalos bootstrap são por sessão e não equivalem a avaliação online. A API aplica filtros obrigatórios; este estudo usa todos os 12 candidatos por sessão."
 }

@@ -1,14 +1,39 @@
 name: tests
 on: [push, pull_request]
+
 jobs:
-  test:
+  quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install -r requirements.txt
-      - run: python scripts/train.py
-      - run: python scripts/diversity_study.py
-      - run: pytest -q
+          cache: 'pip'
+      - name: Install project and quality tools
+        run: pip install -r requirements-dev.txt
+      - name: Static checks
+        run: |
+          ruff check . --select E4,E7,E9,F
+          python -m compileall -q ranklab scripts tests
+      - name: Rebuild synthetic model and evaluations
+        run: |
+          python scripts/train.py
+          python scripts/diversity_study.py
+          python scripts/robustness_study.py
+          python scripts/cold_start_study.py
+      - name: Tests and coverage
+        run: pytest -q --cov=ranklab --cov-report=term-missing --cov-fail-under=90
+
+  dependency-audit:
+    # Advisory: upstream vulnerability feeds can fail independently of the app.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pip-audit
+      - name: Third-party dependency scan (advisory)
+        run: pip-audit -r requirements.txt --progress-spinner off

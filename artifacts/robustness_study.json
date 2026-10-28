@@ -1,0 +1,38 @@
+{
+  "description": "Sensibilidade entre seeds: conjuntos independentes do mesmo gerador sintético",
+  "seeds": [
+    17,
+    29,
+    41
+  ],
+  "sessions_per_seed": 650,
+  "results": [
+    {
+      "seed": 17,
+      "selected_model": "hgb_1",
+      "model_ndcg_at_5": 0.668,
+      "logistic_ndcg_at_5": 0.6602,
+      "pairwise_ndcg_at_5": 0.6452,
+      "rating_ndcg_at_5": 0.2909
+    },
+    {
+      "seed": 29,
+      "selected_model": "hgb_3",
+      "model_ndcg_at_5": 0.6239,
+      "logistic_ndcg_at_5": 0.6428,
+      "pairwise_ndcg_at_5": 0.6505,
+      "rating_ndcg_at_5": 0.3321
+    },
+    {
+      "seed": 41,
+      "selected_model": "hgb_1",
+      "model_ndcg_at_5": 0.6198,
+      "logistic_ndcg_at_5": 0.6193,
+      "pairwise_ndcg_at_5": 0.6134,
+      "rating_ndcg_at_5": 0.3305
+    }
+  ],
+  "model_ndcg_mean": 0.6372,
+  "model_ndcg_sample_std": 0.0267,
+  "caveats": "Não são repetições de produção nem intervalo de confiança externo; somente variedade de sorteios sintéticos."
+}

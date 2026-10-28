@@ -45,7 +45,7 @@ def get_recommendations(
     cuisine: str,
     budget: int = 2,
     rush: bool = False,
-    diversity: float = 0.3,
+    diversity: float = 0.5,
     vegetarian: bool = False,
     max_eta: int = 80,
     k: int = 8,
@@ -53,10 +53,15 @@ def get_recommendations(
     """Aplica filtros, gera scores e reordena sem modificar probabilidades."""
     if cuisine not in CUISINES:
         raise ValueError("Cozinha inválida")
+    if budget not in (1, 2, 3) or not 0 <= diversity <= 1 or not 10 <= max_eta <= 80:
+        raise ValueError("Filtros fora dos intervalos permitidos")
+    if not isinstance(k, int) or k < 1:
+        raise ValueError("A quantidade de recomendações deve ser positiva")
 
     catalog, model = state()
     frame = candidate_features(catalog, cuisine, budget, rush, vegetarian)
-    frame = frame.loc[frame["eta_minutes"] <= max_eta].copy()
+    # Orçamento é limite rígido por faixa (1-3), não indicação para o ML.
+    frame = frame.loc[(frame["price_level"] <= budget) & (frame["eta_minutes"] <= max_eta)].copy()
     if vegetarian:
         frame = frame.loc[frame["vegetarian_option"] == 1].copy()
 
@@ -73,7 +78,7 @@ def get_recommendations(
             "restaurants": [],
             "context": context,
             "synthetic": True,
-            "notice": "Nenhuma opção atende aos filtros. Amplie o tempo máximo.",
+            "notice": "Nenhum restaurante atende a orçamento, dieta e prazo simultaneamente. Ajuste os filtros.",
         }
 
     frame["ml_probability"] = model.predict_proba(frame[FEATURES])[:, 1]
@@ -94,11 +99,12 @@ def get_recommendations(
 
     return {
         "synthetic": True,
+        "score_interpretation": "classifier_output_0_to_1_not_calibrated_for_real_clicks",
         "context": context,
         "restaurants": recommendations,
         "notice": (
-            "Scores aprendidos a partir de dados sintéticos; "
-            "não representam probabilidades de clique em usuários reais."
+            "Índices do classificador treinado em dados sintéticos, sem calibração real; "
+            "as faixas de preço, dieta e tempo funcionam como filtros obrigatórios."
         ),
     }
 

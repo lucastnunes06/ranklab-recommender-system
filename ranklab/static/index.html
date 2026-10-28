@@ -121,9 +121,9 @@
       </option>
      </select>
      <span class="label">
-      Or&ccedil;amento
+      Limite de pre&ccedil;o (faixa obrigat&oacute;ria)
      </span>
-     <div class="chips" id="budgets">
+     <div class="chips" id="budgets" role="group" aria-label="Limite de preço">
       <button class="chip" data-value="1">
        $
       </button>
@@ -149,13 +149,13 @@
      <label class="label" for="diversity">
       Diversidade na lista
      </label>
-     <input id="diversity" max="1" min="0" step="0.05" type="range" value="0.45"/>
+     <input id="diversity" max="1" min="0" step="0.05" type="range" value="0.5"/>
      <div class="smallrow">
       <span>
        Maior foco no score
       </span>
       <b id="divLabel">
-       45%
+       50%
       </b>
      </div>
      <label class="label">
@@ -174,7 +174,7 @@
       <b>
        100% simulados
       </b>
-      . As probabilidades s&atilde;o estimadas por um modelo treinado em dados sint&eacute;ticos.
+      . Os &iacute;ndices do modelo n&atilde;o s&atilde;o probabilidades reais calibradas.
      </div>
     </aside>
     <section class="box">
@@ -220,7 +220,7 @@
       Como a avalia&ccedil;&atilde;o foi feita?
      </h2>
      <p class="asideInfo">
-      Usamos sess&otilde;es sint&eacute;ticas separadas cronologicamente em treino, valida&ccedil;&atilde;o e teste. O mesmo conjunto de teste compara
+      Usamos sess&otilde;es sint&eacute;ticas separadas pelo ID sequencial, sem timestamps reais, em treino, valida&ccedil;&atilde;o e teste. O mesmo conjunto de teste compara
       <b>
        modelo supervisionado
       </b>

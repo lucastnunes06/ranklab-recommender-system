@@ -9,8 +9,7 @@ let requestCounter = 0;
 
 function updateBudgetButtons(selected) {
   budget = Number(selected.dataset.value);
-  
-document.querySelectorAll("#budgets button").forEach((button) => {
+  document.querySelectorAll("#budgets button").forEach((button) => {
     const active = button === selected;
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
@@ -34,7 +33,7 @@ function buildCard(restaurant, position) {
 
   const score = document.createElement("span");
   score.className = "score";
-  score.textContent = `Score do modelo: ${(restaurant.ml_probability * 100).toFixed(1)}%`;
+  score.textContent = `Índice do modelo: ${restaurant.ml_probability.toFixed(3)} (não calibrado)`;
   const bar = document.createElement("div");
   bar.className = "bar";
   const fill = document.createElement("i");
@@ -113,7 +112,7 @@ async function loadRecommendations() {
       container.append(buildCard(restaurant, i));
     });
     if (!payload.restaurants.length) {
-      container.textContent = "Nenhuma opção atende aos filtros. Experimente um prazo maior.";
+      container.textContent = payload.notice || "Nenhum restaurante atende aos filtros. Ajuste orçamento, dieta ou prazo.";
     }
     byId("count").textContent = `${payload.restaurants.length} sugestões`;
     byId("notice").textContent = payload.notice;

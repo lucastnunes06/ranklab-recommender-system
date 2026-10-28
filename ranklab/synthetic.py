@@ -72,10 +72,18 @@ def make_sessions(n_sessions: int = 1450, n_candidates: int = 12, seed: int = 17
                    + (1.25 * frame["vegetarian_option"].values if veg else 0)
                    - (2.2 * (frame["vegetarian_option"].values == 0) if veg else 0)
                    + rng.normal(0, .52, n_candidates))
-        softmax = np.exp(utility - max(utility)); softmax /= softmax.sum()
+        # Na simulação, orçamento e dieta são RESTRIÇÕES, não só preferências.
+        # Sem candidatos elegíveis, a sessão termina sem clique.
+        eligible = (frame["price_level"].to_numpy() <= budget)
+        if veg:
+            eligible &= frame["vegetarian_option"].to_numpy() == 1
         clicked = np.zeros(n_candidates, dtype=int)
-        if rng.random() > .07:  # sessões sem clique também fazem parte da avaliação
-            clicked[int(rng.choice(n_candidates, p=softmax))] = 1
+        if eligible.any() and rng.random() > .07:
+            eligible_positions = np.flatnonzero(eligible)
+            values = utility[eligible_positions]
+            weights = np.exp(values - values.max())
+            weights /= weights.sum()
+            clicked[int(rng.choice(eligible_positions, p=weights))] = 1
         frame["session_id"] = sid
         frame["clicked"] = clicked
         chunks.append(frame)
