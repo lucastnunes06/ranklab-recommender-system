@@ -1,0 +1,61 @@
+{
+  "description": "Estudo de sensibilidade da penalidade de diversidade no holdout sintético",
+  "seed": 17,
+  "total_sessions": 1450,
+  "holdout_sessions": 290,
+  "k": 5,
+  "penalty_per_repetition": 0.042,
+  "levels": [
+    {
+      "diversity": 0.0,
+      "ndcg_at_5": 0.5696,
+      "hit_rate_at_5": 0.7897,
+      "mrr_at_5": 0.4971,
+      "unique_cuisines_top_5": 3.71,
+      "mean_eta_top_5": 30.38,
+      "new_merchant_share_top_5": 0.2517,
+      "sessions": 290
+    },
+    {
+      "diversity": 0.25,
+      "ndcg_at_5": 0.5692,
+      "hit_rate_at_5": 0.7862,
+      "mrr_at_5": 0.4977,
+      "unique_cuisines_top_5": 3.91,
+      "mean_eta_top_5": 30.52,
+      "new_merchant_share_top_5": 0.2524,
+      "sessions": 290
+    },
+    {
+      "diversity": 0.5,
+      "ndcg_at_5": 0.5716,
+      "hit_rate_at_5": 0.7897,
+      "mrr_at_5": 0.4997,
+      "unique_cuisines_top_5": 4.04,
+      "mean_eta_top_5": 30.58,
+      "new_merchant_share_top_5": 0.251,
+      "sessions": 290
+    },
+    {
+      "diversity": 0.75,
+      "ndcg_at_5": 0.5684,
+      "hit_rate_at_5": 0.7828,
+      "mrr_at_5": 0.4977,
+      "unique_cuisines_top_5": 4.17,
+      "mean_eta_top_5": 30.68,
+      "new_merchant_share_top_5": 0.2483,
+      "sessions": 290
+    },
+    {
+      "diversity": 1.0,
+      "ndcg_at_5": 0.5669,
+      "hit_rate_at_5": 0.7793,
+      "mrr_at_5": 0.4967,
+      "unique_cuisines_top_5": 4.28,
+      "mean_eta_top_5": 30.86,
+      "new_merchant_share_top_5": 0.251,
+      "sessions": 290
+    }
+  ],
+  "caveats": "O catálogo e os cliques são sintéticos; o teste é descritivo. Este estudo não seleciona o peso ideal nem comprova impacto em usuários reais. A API aplica filtros antes do re-ranking; este estudo analisa o conjunto de 12 candidatos por sessão."
+}

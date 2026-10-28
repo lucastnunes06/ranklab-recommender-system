@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   RankLab &middot; Restaurant Recommendation System
+  </title>
+  <link href="/static/styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <header class="header">
+   <div class="topnav">
+    <div class="brand">
+     rank
+     <span>
+      lab
+     </span>
+     <span style="font-size:10px;vertical-align:super;margin-left:8px;letter-spacing:1px;color:#a2ceba">
+      LAB
+     </span>
+    </div>
+    <div class="tag">
+     RECOMMENDATION ENGINE &middot; ML RESEARCH
+    </div>
+   </div>
+   <div class="hero">
+    <div class="eyebrow">
+     SISTEMAS DE RECOMENDAÇÃO · EXPERIMENTO LOCAL
+    </div>
+    <h1>
+     Recomendar n&atilde;o &eacute; s&oacute; ordenar por estrelas.
+    </h1>
+    <p>
+     Explore um ranking treinado com sess&otilde;es fict&iacute;cias. Mude as prefer&ecirc;ncias, compare com baselines e veja o que acontece quando a diversidade entra na conta.
+    </p>
+   </div>
+  </header>
+  <main class="inner">
+   <section class="metrics">
+    <div class="metric">
+     <small>
+      NDCG@5 &middot; modelo
+     </small>
+     <strong id="ndcg">
+      &ndash;
+     </strong>
+     <em>
+      Holdout sint&eacute;tico
+     </em>
+    </div>
+    <div class="metric">
+     <small>
+      NDCG@5 &middot; baseline estrelas
+     </small>
+     <strong id="baseline">
+      &ndash;
+     </strong>
+     <em>
+      Compara&ccedil;&atilde;o no mesmo teste
+     </em>
+    </div>
+    <div class="metric">
+     <small>
+      Hit Rate@5 &middot; modelo
+     </small>
+     <strong id="hit">
+      &ndash;
+     </strong>
+     <em>
+      Relev&acirc;ncia offline
+     </em>
+    </div>
+    <div class="metric">
+     <small>
+      Sess&otilde;es de teste
+     </small>
+     <strong id="sessions">
+      &ndash;
+     </strong>
+     <em>
+      Separa&ccedil;&atilde;o por sess&atilde;o
+     </em>
+    </div>
+   </section>
+   <div class="workspace">
+    <aside class="box">
+     <h2>
+      Personalize o ranking
+     </h2>
+     <p class="tip">
+      Selecione um cen&aacute;rio e observe a ordem das sugest&otilde;es. Nenhum dado real &eacute; coletado.
+     </p>
+     <label class="label" for="cuisine">
+      Cozinha favorita
+     </label>
+     <select class="select" id="cuisine">
+      <option>
+       Pizza
+      </option>
+      <option>
+       Brasileira
+      </option>
+      <option>
+       Japonesa
+      </option>
+      <option>
+       Saud&aacute;vel
+      </option>
+      <option>
+       Hamb&uacute;rguer
+      </option>
+      <option>
+       &Aacute;rabe
+      </option>
+      <option>
+       Italiana
+      </option>
+      <option>
+       Vegana
+      </option>
+     </select>
+     <span class="label">
+      Or&ccedil;amento
+     </span>
+     <div class="chips" id="budgets">
+      <button class="chip" data-value="1">
+       $
+      </button>
+      <button class="chip active" data-value="2">
+       $$
+      </button>
+      <button class="chip" data-value="3">
+       $$$
+      </button>
+     </div>
+     <label class="label" for="eta">
+      Prazo m&aacute;ximo estimado
+     </label>
+     <input id="eta" max="80" min="20" step="5" type="range" value="80"/>
+     <div class="smallrow">
+      <span>
+       20 min
+      </span>
+      <b id="etaLabel">
+       At&eacute; 80 min
+      </b>
+     </div>
+     <label class="label" for="diversity">
+      Diversidade na lista
+     </label>
+     <input id="diversity" max="1" min="0" step="0.05" type="range" value="0.45"/>
+     <div class="smallrow">
+      <span>
+       Maior foco no score
+      </span>
+      <b id="divLabel">
+       45%
+      </b>
+     </div>
+     <label class="label">
+      <input checked="" id="rush" type="checkbox"/>
+      Estou com pressa
+     </label>
+     <label class="label">
+      <input id="veg" type="checkbox"/>
+      Apenas op&ccedil;&otilde;es vegetarianas
+     </label>
+     <button class="apply" id="apply">
+      Recalcular recomenda&ccedil;&otilde;es &nearrow;
+     </button>
+     <div class="safe">
+      Todos os estabelecimentos, prefer&ecirc;ncias e intera&ccedil;&otilde;es s&atilde;o
+      <b>
+       100% simulados
+      </b>
+      . As probabilidades s&atilde;o estimadas por um modelo treinado em dados sint&eacute;ticos.
+     </div>
+    </aside>
+    <section class="box">
+     <div class="listhead">
+      <div>
+       <h2>
+        Para voc&ecirc;, neste cen&aacute;rio
+       </h2>
+       <p class="tip" id="intro">
+        Ordena&ccedil;&atilde;o personalizada com justificativas simples.
+       </p>
+      </div>
+      <span class="count" id="count">
+       8 sugest&otilde;es
+      </span>
+     </div>
+     <div class="cards" id="cards">
+     </div>
+     <div class="foot" id="notice">
+      Carregando resultados&hellip;
+     </div>
+    </section>
+   </div>
+   <section class="box study-panel" aria-labelledby="study-title">
+    <div class="study-title">
+     <div>
+      <h2 id="study-title">O que muda quando a lista fica mais diversa?</h2>
+      <p class="tip">Experimento offline no mesmo conjunto de 290 sessões fictícias. Aumentar a variedade nem sempre melhora a relevância.</p>
+     </div>
+     <span class="count">Experimento reproduzível</span>
+    </div>
+    <div class="study-table-wrap">
+     <table class="study-table">
+      <thead><tr><th>Intensidade</th><th>NDCG@5</th><th>Cozinhas diferentes / 5</th><th>Hit Rate@5</th></tr></thead>
+      <tbody id="studyRows"><tr><td colspan="4">Carregando resultados do experimento...</td></tr></tbody>
+     </table>
+    </div>
+    <p class="study-note">A penalidade é uma escolha de pesquisa, não uma otimização validada com pessoas. Nenhum experimento A/B foi realizado.</p>
+   </section>
+   <div class="bottom">
+    <section class="box">
+     <h2>
+      Como a avalia&ccedil;&atilde;o foi feita?
+     </h2>
+     <p class="asideInfo">
+      Usamos sess&otilde;es sint&eacute;ticas separadas cronologicamente em treino, valida&ccedil;&atilde;o e teste. O mesmo conjunto de teste compara
+      <b>
+       modelo supervisionado
+      </b>
+      ,
+      <b>
+       avalia&ccedil;&atilde;o m&eacute;dia
+      </b>
+      e
+      <b>
+       tempo estimado
+      </b>
+      com NDCG@5, Hit Rate@5 e MRR@5. Nenhuma m&eacute;trica equivale a resultado de neg&oacute;cio real.
+     </p>
+    </section>
+    <section class="box">
+     <h2>
+      Trade-off de diversidade
+     </h2>
+     <p class="asideInfo">
+      Um re-ranker aplica uma penalidade quando restaurantes da mesma cozinha se repetem. O controle altera a lista sem reescrever a probabilidade do modelo. O painel usa a mesma reordena&ccedil;&atilde;o gulosa analisada no experimento reproduz&iacute;vel. A compensa&ccedil;&atilde;o entre variedade e relev&acirc;ncia &eacute; uma
+      <b>
+       hip&oacute;tese de produto
+      </b>
+      , n&atilde;o uma melhoria comprovada em experimento A/B. Veja
+      <a href="https://github.com/lucastnunes06/ranklab-recommender-system/blob/main/artifacts/diversity_study.json">
+       os dados da compara&ccedil;&atilde;o
+      </a>
+      .
+     </p>
+    </section>
+   </div>
+   <p class="foot" style="margin-top:18px">
+    RankLab &middot; Projeto independente com assist&ecirc;ncia de IA no desenvolvimento; dados e cen&aacute;rios simulados.
+   </p>
+  </main>
+  <script defer="" src="/static/app.js">
+  </script>
+ </body>
+</html>

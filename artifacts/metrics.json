@@ -1,0 +1,127 @@
+{
+  "dataset": "100% sintético, usuários, restaurantes, cliques e horários simulados",
+  "seed": 17,
+  "train_sessions": 870,
+  "validation_sessions": 290,
+  "test_sessions": 290,
+  "candidates_per_session": 12,
+  "test": {
+    "model": {
+      "ndcg_at_5": 0.5696,
+      "hit_rate_at_5": 0.7897,
+      "mrr_at_5": 0.4971,
+      "mean_eta_top_5": 30.38,
+      "unique_cuisines_top_5": 3.71,
+      "new_merchant_share_top_5": 0.2517,
+      "sessions": 290,
+      "hit_rate_by_preference": {
+        "Saudável": 0.8293,
+        "Árabe": 0.7241,
+        "Vegana": 0.8605,
+        "Italiana": 0.7353,
+        "Hambúrguer": 0.7,
+        "Pizza": 0.7895,
+        "Brasileira": 0.8718,
+        "Japonesa": 0.75
+      }
+    },
+    "rating_baseline": {
+      "ndcg_at_5": 0.2857,
+      "hit_rate_at_5": 0.4828,
+      "mrr_at_5": 0.2224,
+      "mean_eta_top_5": 37.6,
+      "unique_cuisines_top_5": 3.81,
+      "new_merchant_share_top_5": 0.1545,
+      "sessions": 290,
+      "hit_rate_by_preference": {
+        "Saudável": 0.4146,
+        "Árabe": 0.3793,
+        "Vegana": 0.6047,
+        "Italiana": 0.5882,
+        "Hambúrguer": 0.3667,
+        "Pizza": 0.5,
+        "Brasileira": 0.4615,
+        "Japonesa": 0.5
+      }
+    },
+    "fastest_baseline": {
+      "ndcg_at_5": 0.3757,
+      "hit_rate_at_5": 0.6034,
+      "mrr_at_5": 0.3011,
+      "mean_eta_top_5": 25.5,
+      "unique_cuisines_top_5": 3.66,
+      "new_merchant_share_top_5": 0.251,
+      "sessions": 290,
+      "hit_rate_by_preference": {
+        "Saudável": 0.6829,
+        "Árabe": 0.5172,
+        "Vegana": 0.5814,
+        "Italiana": 0.6765,
+        "Hambúrguer": 0.6,
+        "Pizza": 0.5789,
+        "Brasileira": 0.5385,
+        "Japonesa": 0.6389
+      }
+    }
+  },
+  "validation": {
+    "ml": {
+      "ndcg_at_5": 0.5756,
+      "hit_rate_at_5": 0.7724,
+      "mrr_at_5": 0.5099,
+      "mean_eta_top_5": 31.23,
+      "unique_cuisines_top_5": 3.7,
+      "new_merchant_share_top_5": 0.2352,
+      "sessions": 290,
+      "hit_rate_by_preference": {
+        "Vegana": 0.875,
+        "Hambúrguer": 0.7959,
+        "Brasileira": 0.6444,
+        "Italiana": 0.7838,
+        "Árabe": 0.6364,
+        "Japonesa": 0.9091,
+        "Saudável": 0.7879,
+        "Pizza": 0.7857
+      }
+    },
+    "rating": {
+      "ndcg_at_5": 0.2702,
+      "hit_rate_at_5": 0.4724,
+      "mrr_at_5": 0.2051,
+      "mean_eta_top_5": 38.09,
+      "unique_cuisines_top_5": 3.84,
+      "new_merchant_share_top_5": 0.1566,
+      "sessions": 290,
+      "hit_rate_by_preference": {
+        "Vegana": 0.5312,
+        "Hambúrguer": 0.2857,
+        "Brasileira": 0.5111,
+        "Italiana": 0.6486,
+        "Árabe": 0.6061,
+        "Japonesa": 0.3636,
+        "Saudável": 0.4545,
+        "Pizza": 0.4286
+      }
+    },
+    "fast": {
+      "ndcg_at_5": 0.3842,
+      "hit_rate_at_5": 0.6172,
+      "mrr_at_5": 0.3078,
+      "mean_eta_top_5": 25.87,
+      "unique_cuisines_top_5": 3.69,
+      "new_merchant_share_top_5": 0.2524,
+      "sessions": 290,
+      "hit_rate_by_preference": {
+        "Vegana": 0.625,
+        "Hambúrguer": 0.6531,
+        "Brasileira": 0.5333,
+        "Italiana": 0.8108,
+        "Árabe": 0.4848,
+        "Japonesa": 0.7273,
+        "Saudável": 0.6061,
+        "Pizza": 0.4643
+      }
+    }
+  },
+  "limitations": "Métricas offline sintéticas; não estimam conversão, receita, CTR ou resultados de operações reais."
+}
